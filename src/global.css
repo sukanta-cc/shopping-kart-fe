@@ -1,0 +1,9 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+div.Toastify__toast-body > div:nth-child(2) {
+	font-size: 14px !important;
+}
