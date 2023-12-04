@@ -10,12 +10,14 @@ export const productHeader = [
 	{
 		Header: "productcode",
 		accessor: "code",
-		align: "center",
 	},
 	{
 		Header: "Discount",
 		accessor: "discount",
-		align: "center",
+	},
+	{
+		Header: "price",
+		accessor: "price",
 	},
 	{
 		Header: "featured",
@@ -25,11 +27,6 @@ export const productHeader = [
 	{
 		Header: "status",
 		accessor: "status",
-		align: "center",
-	},
-	{
-		Header: "price",
-		accessor: "price",
 		align: "center",
 	},
 	{
