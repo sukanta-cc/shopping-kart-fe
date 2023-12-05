@@ -75,23 +75,26 @@ function Products() {
 
   const getProducts = async () => {
     try {
-      let url = `/products`;
+      let url = "/products?";
 
       if (search && status && featured) {
         if (status !== "all" && featured !== "all") {
-          url = `/products?search=${search}&status=${
-            status === "active" ? true : false
-          }&featured=${featured === "active" ? true : false}`;
+          url += `search=${search}&status=${status === "active"}&featured=${
+            featured === "active"
+          }`;
         }
       }
-      if (search) {
-        url = `${url}?search=${search}`;
+
+      if (search && !(status !== "all" && featured !== "all")) {
+        url += `search=${search}&`;
       }
-      if (status !== "all") {
-        url = `${url}?status=${status === "active" ? true : false}`;
+
+      if (status !== "all" && !(search && status && featured)) {
+        url += `status=${status === "active"}&`;
       }
-      if (featured !== "all") {
-        url = `${url}?featured=${featured === "active" ? true : false}`;
+
+      if (featured !== "all" && !(search && status && featured)) {
+        url += `featured=${featured === "active"}&`;
       }
 
       const result = await axios.get(url);
