@@ -1,18 +1,68 @@
+@import "react-image-gallery/styles/css/image-gallery.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .strikethrough {
-  position: relative;
-  color: red;
+    position: relative;
+    color: red;
 }
 .strikethrough:before {
-  position: absolute;
-  content: "";
-  left: 0;
-  top: 50%;
-  right: 0;
-  border-top: 1px solid;
-  border-color: inherit;
-  -webkit-transform: rotate(-5deg);
-  -moz-transform: rotate(-5deg);
-  -ms-transform: rotate(-5deg);
-  -o-transform: rotate(-5deg);
-  transform: rotate(-5deg);
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 50%;
+    right: 0;
+    border-top: 1px solid;
+    border-color: red;
+    -webkit-transform: rotate(-5deg);
+    -moz-transform: rotate(-5deg);
+    -ms-transform: rotate(-5deg);
+    -o-transform: rotate(-5deg);
+    transform: rotate(-5deg);
+}
+
+.product-search {
+    height: 2.4rem;
+    width: 10rem;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid transparent;
+    outline: none;
+    background-color: white !important;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.table-description > p {
+    width: 9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* styles.css */
+:root {
+    --gold: #fde047;
+}
+
+/* Additional CSS rules for styling your React components */
+
+@layer base {
+    button {
+        @apply border border-black rounded-xl px-5 py-1;
+    }
+}
+
+.react-rater-star.is-active-half:before {
+    color: var(--gold) !important;
+}
+
+.react-rater-star.is-active {
+    color: var(--gold) !important;
+}
+
+.image-gallery-image {
+    height: 30rem;
 }
