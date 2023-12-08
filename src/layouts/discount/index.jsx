@@ -19,6 +19,10 @@ import { toast } from "react-toastify";
 import { discountHeader } from "utils/constants";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import MDButton from "components/MDButton";
+import DialogModel from "components/Dialog/Dialog";
+import AddDiscount from "./DiscountForm";
+import DiscountForm from "./DiscountForm";
 
 function DiscountTable() {
     const navigate = useNavigate();
@@ -41,13 +45,16 @@ function DiscountTable() {
                         global: (
                             <Checkbox
                                 readOnly
+                                disabled
                                 checked={item.global}
                                 // onChange={() => handleStatusChange(item)}
                             />
                         ),
-                        product: item.product?.name ? (
+                        productCode: item.product?.name ? (
                             <Link to={`/product-details/${item.product._id}`}>
-                                {item.product?.name}
+                                <p className="text-blue-700">
+                                    {item.product?.productCode}
+                                </p>
                             </Link>
                         ) : (
                             "--"
@@ -158,8 +165,27 @@ function DiscountTable() {
                                             variant="h5"
                                             color="white"
                                         >
-                                            Products
+                                            Discounts
                                         </MDTypography>
+
+                                        <MDBox
+                                            pr={1}
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <MDButton
+                                                variant="gradient"
+                                                color="light"
+                                                fullWidth
+                                                onClick={() => setOpen(true)}
+                                            >
+                                                <Icon>add</Icon>
+                                                Add Discount
+                                            </MDButton>
+                                        </MDBox>
                                     </div>
                                 </MDBox>
 
@@ -179,6 +205,12 @@ function DiscountTable() {
                         </Grid>
                     </Grid>
                 </MDBox>
+                <DialogModel
+                    title="Add Discount"
+                    open={open}
+                    handleDialogClose={() => setOpen(false)}
+                    description={<DiscountForm />}
+                />
             </DashboardLayout>
         </div>
     );

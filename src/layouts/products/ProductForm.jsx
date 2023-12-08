@@ -343,7 +343,7 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
                             fullWidth
                             onClick={handleFormSubmit}
                         >
-                            {product._id ? "Update" : "Add Product"}
+                            {product?._id ? "Update" : "Add Product"}
                         </MDButton>
                     </MDBox>
                 </MDBox>

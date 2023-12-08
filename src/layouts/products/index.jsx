@@ -131,7 +131,7 @@ function Products() {
                                 </p>
                                 <strong style={{ color: "green" }}>
                                     $
-                                    {item.discount.type === "percentage"
+                                    {item?.discount?.type === "percentage"
                                         ? (
                                               item.amount -
                                               (item.amount *
