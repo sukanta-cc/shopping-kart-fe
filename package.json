@@ -13,6 +13,7 @@
     "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^1.18.1",
     "@ckeditor/ckeditor5-build-classic": "^40.1.0",
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "@emotion/cache": "11.10.8",
@@ -20,6 +21,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "5.11.16",
     "@mui/material": "^5.14.19",
+    "antd": "^5.12.1",
     "axios": "^1.6.2",
     "chart.js": "4.3.0",
     "chroma-js": "2.4.2",
