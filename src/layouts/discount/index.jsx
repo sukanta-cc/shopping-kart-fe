@@ -25,9 +25,10 @@ import AddDiscount from "./DiscountForm";
 import DiscountForm from "./DiscountForm";
 
 function DiscountTable() {
-    const navigate = useNavigate();
     const [discounts, setDiscounts] = useState([]);
+    const [discount, setDiscount] = useState({});
     const [open, setOpen] = useState(false);
+    const [view, setView] = useState(false);
 
     const getDiscounts = async () => {
         try {
@@ -59,17 +60,19 @@ function DiscountTable() {
                         ) : (
                             "--"
                         ),
-                        status: (
-                            <Checkbox
-                                checked={item.status}
-                                // onChange={() => handleStatusChange(item)}
-                            />
-                        ),
+                        // status: (
+                        //     <Checkbox
+                        //         checked={item.status}
+                        //         onChange={() => handleStatusChange(item)}
+                        //     />
+                        // ),
                         actions: (
                             <>
                                 <IconButton
                                     onClick={() => {
+                                        setDiscount(item);
                                         setOpen(true);
+                                        setView(true);
                                     }}
                                 >
                                     <Tooltip title="Edit" followCursor>
@@ -88,7 +91,9 @@ function DiscountTable() {
 
                                 <IconButton
                                     onClick={() => {
+                                        setDiscount(item);
                                         setOpen(true);
+                                        setView(false);
                                     }}
                                 >
                                     <Tooltip title="Edit" followCursor>
@@ -208,8 +213,17 @@ function DiscountTable() {
                 <DialogModel
                     title="Add Discount"
                     open={open}
-                    handleDialogClose={() => setOpen(false)}
-                    description={<DiscountForm />}
+                    handleDialogClose={() => {
+                        setDiscount({});
+                        setOpen(false);
+                    }}
+                    description={
+                        <DiscountForm
+                            discount={discount}
+                            setOpen={setOpen}
+                            view={view}
+                        />
+                    }
                 />
             </DashboardLayout>
         </div>

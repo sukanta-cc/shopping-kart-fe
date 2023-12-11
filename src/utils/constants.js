@@ -58,11 +58,11 @@ export const discountHeader = [
         Header: "Product Code",
         accessor: "productCode",
     },
-    {
-        Header: "Status",
-        accessor: "status",
-        align: "center",
-    },
+    // {
+    //     Header: "Status",
+    //     accessor: "status",
+    //     align: "center",
+    // },
     {
         Header: "Actions",
         accessor: "actions",

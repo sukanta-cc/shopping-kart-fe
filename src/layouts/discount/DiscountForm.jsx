@@ -12,23 +12,60 @@ import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { ExpandMore } from "@mui/icons-material";
 
-function DiscountForm({ discount }) {
-    const [formData, setFormData] = useState({});
+function DiscountForm({ discount, setOpen, view }) {
+    const [formData, setFormData] = useState({
+        name: "",
+        discount: "",
+        type: "amount",
+        global: "Yes",
+        status: false,
+        product: "",
+    });
     const [products, setProducts] = useState([]);
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
-        console.log(name, value, "<<-- name and value");
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
     const handleFormSubmit = async () => {
-        console.log("Hello world!");
+        try {
+            const bodyData = {
+                name: formData.name,
+                discount: formData.discount,
+                type: formData.type,
+                global: formData.global,
+                status: formData.status,
+            };
+
+            if (formData.product) {
+                bodyData.product = formData.product;
+            }
+
+            let url = "/discounts";
+
+            if (discount._id) {
+                url = `/discounts/${discount._id}`;
+            }
+
+            const data = await axios.post(url, bodyData);
+
+            if (data.data.success) {
+                toast.success(data.data.message);
+            }
+        } catch (error) {
+            console.error(error, "<<-- Error in add discount");
+            toast.error("Failed to add discount");
+        }
+
+        setOpen(false);
     };
 
     const getProducts = async () => {
         const res = await axios.get(`/products`);
-        console.log(res.data, "<<-- res.data");
         setProducts(res.data.result);
     };
 
@@ -37,8 +74,17 @@ function DiscountForm({ discount }) {
     }, []);
 
     useEffect(() => {
-        console.log(formData, "<<-- formData`");
-    }, [formData]);
+        if (discount) {
+            setFormData({
+                name: discount.name,
+                discount: discount.discount,
+                type: discount.type,
+                global: discount.global ? "Yes" : "No",
+                status: discount.status,
+                product: discount.product?.name,
+            });
+        }
+    }, [discount]);
 
     return (
         <div>
@@ -51,6 +97,7 @@ function DiscountForm({ discount }) {
                                     Name*
                                 </MDTypography>
                                 <MDInput
+                                    disabled={view}
                                     type="text"
                                     id="name"
                                     value={formData?.name}
@@ -68,6 +115,7 @@ function DiscountForm({ discount }) {
                                     Discount*
                                 </MDTypography>
                                 <MDInput
+                                    disabled={view}
                                     type="text"
                                     id="discount"
                                     value={formData?.discount}
@@ -81,19 +129,35 @@ function DiscountForm({ discount }) {
                         </Grid>
                         <Grid item xs={6}>
                             <MDBox mb={2}>
-                                <MDTypography variant="h6" color="dark">
-                                    Type*
-                                </MDTypography>
-                                <MDInput
-                                    type="text"
-                                    id="type"
-                                    value={formData?.type}
-                                    placeholder="Type"
-                                    // label='Phone Number'
-                                    name="type"
-                                    fullWidth
-                                    onChange={handleFormChange}
-                                />
+                                <FormControl fullWidth>
+                                    <MDTypography variant="h6" color="dark">
+                                        Type*
+                                    </MDTypography>
+                                    <Select
+                                        disabled={view}
+                                        id="type"
+                                        IconComponent={() => (
+                                            <ExpandMore className="dropdown-arrow" />
+                                        )}
+                                        defaultValue={"amount"}
+                                        className="user-filter-for-edit"
+                                        placeholder="Enter type"
+                                        value={formData?.type}
+                                        onChange={(e) =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                type: e.target.value,
+                                            }))
+                                        }
+                                    >
+                                        <MenuItem value={"amount"}>
+                                            Amount
+                                        </MenuItem>
+                                        <MenuItem value={"percentage"}>
+                                            Percentage
+                                        </MenuItem>
+                                    </Select>
+                                </FormControl>
                             </MDBox>
                         </Grid>
                         <Grid item xs={6}>
@@ -103,7 +167,11 @@ function DiscountForm({ discount }) {
                                         Global*
                                     </MDTypography>
                                     <Select
+                                        disabled={view}
                                         id="global"
+                                        IconComponent={() => (
+                                            <ExpandMore className="dropdown-arrow" />
+                                        )}
                                         defaultValue={"Yes"}
                                         className="user-filter-for-edit"
                                         placeholder="Enter featured"
@@ -129,26 +197,37 @@ function DiscountForm({ discount }) {
                                         Product Name
                                     </MDTypography>
                                     <Autocomplete
+                                        disabled={view}
                                         // freeSolo
-                                        id="free-solo-2-demo"
+                                        id="product"
                                         disableClearable
+                                        isOptionEqualToValue={(option, value) =>
+                                            option.id === value.id
+                                        }
+                                        inputValue={formData.product}
                                         options={products.map((option) => ({
                                             label: option.name,
                                             id: option._id,
                                         }))}
                                         onChange={(e, value) =>
-                                            console.log(
-                                                JSON.stringify(
-                                                    value,
-                                                    null,
-                                                    " "
-                                                ),
-                                                "<<-- value"
-                                            )
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                product: value.id,
+                                            }))
                                         }
+                                        autoSelect
+                                        renderOption={(props, option) => {
+                                            return (
+                                                <li {...props} key={option.id}>
+                                                    {option.label}
+                                                </li>
+                                            );
+                                        }}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
+                                                // value={"Test"}
+                                                placeholder="Select a product"
                                                 InputProps={{
                                                     ...params.InputProps,
                                                     type: "search",
@@ -160,16 +239,20 @@ function DiscountForm({ discount }) {
                             </MDBox>
                         </Grid>
                     </Grid>
-                    <MDBox mt={4} mb={1}>
-                        <MDButton
-                            variant="gradient"
-                            color="info"
-                            fullWidth
-                            onClick={handleFormSubmit}
-                        >
-                            {discount?._id ? "Update Discount" : "Add Discount"}
-                        </MDButton>
-                    </MDBox>
+                    {!view && (
+                        <MDBox mt={4} mb={1}>
+                            <MDButton
+                                variant="gradient"
+                                color="info"
+                                fullWidth
+                                onClick={handleFormSubmit}
+                            >
+                                {discount?._id
+                                    ? "Update Discount"
+                                    : "Add Discount"}
+                            </MDButton>
+                        </MDBox>
+                    )}
                 </MDBox>
             </MDBox>
         </div>
