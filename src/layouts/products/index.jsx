@@ -229,9 +229,8 @@ function Products() {
                             </>
                         ),
                     });
-
-                    setProducts(arr);
                 });
+                setProducts(arr);
             }
         } catch (error) {
             console.error(error, "<<-- ERROR in get products");

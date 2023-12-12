@@ -30,7 +30,7 @@ function CouponTable() {
     const [open, setOpen] = useState(false);
     const [view, setView] = useState(false);
 
-    const getDiscounts = async () => {
+    const getCoupon = async () => {
         try {
             const discounts = await axios.get("/coupons");
 
@@ -121,7 +121,7 @@ function CouponTable() {
     };
 
     useEffect(() => {
-        getDiscounts();
+        getCoupon();
     }, []);
 
     return (
@@ -206,6 +206,7 @@ function CouponTable() {
                             coupon={coupon}
                             setOpen={setOpen}
                             view={view}
+                            getCoupon={getCoupon}
                         />
                     }
                 />

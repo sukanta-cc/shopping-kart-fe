@@ -17,8 +17,10 @@ import { ExpandMore } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import * as yup from "yup";
+import couponSchema from "./validationSchema";
 
-function CouponForm({ coupon, setOpen, view }) {
+function CouponForm({ coupon, setOpen, view, getCoupon }) {
     const [formData, setFormData] = useState({
         code: "",
         value: "",
@@ -39,28 +41,35 @@ function CouponForm({ coupon, setOpen, view }) {
                 code: formData.code,
                 value: formData.value,
                 type: formData.type,
-                validFrom: formData.validFrom,
-                validUntil: formData.validUntil,
+                validFrom: formData.validFrom.$d.toISOString(),
+                validUntil: formData.validUntil.$d.toISOString(),
                 maxUses: formData.maxUses,
             };
 
-            let url = "/coupons";
+            const isValid = await couponSchema.isValid(bodyData);
 
-            if (coupon._id) {
-                url = `/coupons/${coupon._id}`;
-            }
+            console.log(isValid, "<<-- isValid");
+            if (isValid) {
+                let url = "/coupons";
 
-            const data = await axios.post(url, bodyData);
+                if (coupon._id) {
+                    url = `/coupons/${coupon._id}`;
+                }
 
-            if (data.data.success) {
-                toast.success(data.data.message);
+                const data = await axios.post(url, bodyData);
+
+                if (data.data.success) {
+                    toast.success(data.data.message);
+                    getCoupon();
+                    setOpen(false);
+                }
+            } else {
+                toast.error("Validation failed");
             }
         } catch (error) {
             console.error(error, "<<-- Error in add discount");
             toast.error("Failed to add discount");
         }
-
-        setOpen(false);
     };
 
     useEffect(() => {
@@ -69,8 +78,8 @@ function CouponForm({ coupon, setOpen, view }) {
                 code: coupon.code,
                 value: coupon.value,
                 type: coupon.type,
-                validFrom: dayjs(coupon.validFrom),
-                validUntil: dayjs(coupon.validUntil),
+                validFrom: coupon.validFrom && dayjs(coupon.validFrom),
+                validUntil: coupon.validUntil && dayjs(coupon.validUntil),
                 maxUses: coupon.maxUses,
             });
         }
@@ -107,7 +116,7 @@ function CouponForm({ coupon, setOpen, view }) {
                                     </MDTypography>
                                     <MDInput
                                         disabled={view}
-                                        type="text"
+                                        type="number"
                                         id="value"
                                         value={formData?.value}
                                         // label='Email'
@@ -155,18 +164,19 @@ function CouponForm({ coupon, setOpen, view }) {
                                 <MDBox mb={2}>
                                     <FormControl fullWidth>
                                         <MDTypography variant="h6" color="dark">
-                                            Valid from*
+                                            Valid from
                                         </MDTypography>
                                         <LocalizationProvider
                                             dateAdapter={AdapterDayjs}
                                         >
                                             <DatePicker
+                                                disablePast
+                                                disabled={view}
                                                 value={formData.validFrom}
                                                 onChange={(newValue) => {
                                                     setFormData({
                                                         ...formData,
-                                                        validFrom:
-                                                            newValue.$d?.toISOString(),
+                                                        validFrom: newValue,
                                                     });
                                                 }}
                                             />
@@ -178,18 +188,19 @@ function CouponForm({ coupon, setOpen, view }) {
                                 <MDBox mb={2}>
                                     <FormControl fullWidth>
                                         <MDTypography variant="h6" color="dark">
-                                            Valid until*
+                                            Valid until
                                         </MDTypography>
                                         <LocalizationProvider
                                             dateAdapter={AdapterDayjs}
                                         >
                                             <DatePicker
+                                                disablePast
+                                                disabled={view}
                                                 value={formData.validUntil}
                                                 onChange={(newValue) => {
                                                     setFormData({
                                                         ...formData,
-                                                        validUntil:
-                                                            newValue.$d?.toISOString(),
+                                                        validUntil: newValue,
                                                     });
                                                 }}
                                             />
