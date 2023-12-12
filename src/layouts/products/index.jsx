@@ -398,7 +398,10 @@ function Products() {
             <DialogModel
                 title="Product Details"
                 open={open}
-                handleDialogClose={() => setOpen(false)}
+                handleDialogClose={() => {
+                    setProductDetails({});
+                    setOpen(false);
+                }}
                 // handleFormSubmit={handleFormSubmit}
                 description={
                     <ProductForm

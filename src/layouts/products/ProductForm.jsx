@@ -1,7 +1,14 @@
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDropzone } from "react-dropzone";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import { FormControl, Grid, MenuItem, Select } from "@mui/material";
+import {
+    FormControl,
+    Grid,
+    Icon,
+    IconButton,
+    MenuItem,
+    Select,
+} from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
@@ -39,6 +46,7 @@ const thumbsContainer = {
 };
 
 const thumb = {
+    position: "relative",
     display: "inline-flex",
     borderRadius: 2,
     border: "1px solid #eaeaea",
@@ -69,6 +77,7 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
         featured: "No",
     });
     const [files, setFiles] = useState([]);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
 
     useEffect(() => {
         if (product._id) {
@@ -94,13 +103,15 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
             "image/*": [],
         },
         onDrop: (acceptedFiles) => {
-            setFiles(
-                acceptedFiles.map((file) =>
-                    Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                    })
-                )
+            console.log(acceptedFiles, "<<-- accepted files");
+            let newFiles = acceptedFiles.map((file) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                })
             );
+            const arr = [...files, ...newFiles];
+            setUploadedFiles(newFiles);
+            setFiles(arr);
         },
     });
 
@@ -113,19 +124,21 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
-        // console.log(name, value, "<<-- name, value");
         setFormData({ ...formData, [name]: value });
     };
+
+    useEffect(() => {
+        console.log(formData, "<<-- form data");
+    });
 
     const handleFormSubmit = async () => {
         const data = new FormData();
 
-        if (!product._id) {
-            files.map((file) => {
-                data.append("images", file);
-            });
-        }
+        uploadedFiles.map((file) => {
+            data.append("images", file);
+        });
 
+        data.append("imageUrls", formData.images);
         data.append("name", formData.name);
         data.append("productCode", formData.productCode);
         data.append("description", formData.description);
@@ -152,7 +165,18 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
         }
     };
 
-    const thumbs = files.map((file) => (
+    const handleRemoveImage = (idx) => {
+        let arr = [...files];
+        let arr2 = [...formData.images];
+        arr.splice(idx, 1);
+        if (!!arr2[idx]) {
+            arr2.splice(idx, 1);
+        }
+        setFiles(arr);
+        setFormData({ ...formData, images: arr2 });
+    };
+
+    const thumbs = files.map((file, idx) => (
         <div style={thumb} key={file.name}>
             <div style={thumbInner}>
                 <img
@@ -164,6 +188,12 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
                     }}
                 />
             </div>
+            <IconButton
+                className="absolute top-0 right-0 h-1 w-1 bg-white rounded-none text-black"
+                onClick={() => handleRemoveImage(idx)}
+            >
+                <Icon>close</Icon>
+            </IconButton>
         </div>
     ));
 
