@@ -69,3 +69,43 @@ export const discountHeader = [
         align: "center",
     },
 ];
+
+export const couponHeader = [
+    {
+        Header: "Code",
+        accessor: "code",
+    },
+    {
+        Header: "Value",
+        accessor: "value",
+    },
+    {
+        Header: "Type",
+        accessor: "type",
+    },
+    {
+        Header: "Valid from",
+        accessor: "validFrom",
+        align: "center",
+    },
+    {
+        Header: "Valid until",
+        accessor: "validUntil",
+        align: "center",
+    },
+    {
+        Header: "Max uses",
+        accessor: "maxUse",
+        align: "center",
+    },
+    {
+        Header: "Used count",
+        accessor: "usedCount",
+        align: "center",
+    },
+    {
+        Header: "Actions",
+        accessor: "actions",
+        align: "center",
+    },
+];

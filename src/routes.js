@@ -55,6 +55,7 @@ import Cover from "layouts/authentication/reset-password/cover";
 import Verification from "layouts/authentication/reset-password/cover/Verification";
 import DiscountTable from "layouts/discount";
 import ProductDetails from "layouts/products/ProductDetails";
+import CouponTable from "layouts/coupons";
 
 const routes = [
     {
@@ -80,6 +81,14 @@ const routes = [
         icon: <Icon fontSize="small">discount</Icon>,
         route: "/discount",
         component: <DiscountTable />,
+    },
+    {
+        type: "collapse",
+        name: "Coupons",
+        key: "coupons",
+        icon: <Icon fontSize="small">loyalty</Icon>,
+        route: "/coupons",
+        component: <CouponTable />,
     },
     {
         type: "collapse",
