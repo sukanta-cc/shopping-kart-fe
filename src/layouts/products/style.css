@@ -65,3 +65,17 @@
 .image-gallery-image {
     height: 30rem;
 }
+
+#components-popconfirm-demo-placement .ant-btn {
+    margin-left: 0;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    width: 70px;
+    text-align: center;
+    padding: 0;
+    background-color: #4096ff !important;
+}
+#components-popconfirm-demo-placement .ant-btn-rtl {
+    margin-left: 8px;
+    margin-right: 0;
+}

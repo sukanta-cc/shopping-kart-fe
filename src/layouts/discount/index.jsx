@@ -222,6 +222,7 @@ function DiscountTable() {
                             discount={discount}
                             setOpen={setOpen}
                             view={view}
+                            getDiscounts={getDiscounts}
                         />
                     }
                 />

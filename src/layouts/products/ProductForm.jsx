@@ -127,10 +127,6 @@ const ProductForm = ({ product, getProducts, setOpen }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    useEffect(() => {
-        console.log(formData, "<<-- form data");
-    });
-
     const handleFormSubmit = async () => {
         const data = new FormData();
 

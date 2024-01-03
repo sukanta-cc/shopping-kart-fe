@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ExpandMore } from "@mui/icons-material";
 
-function DiscountForm({ discount, setOpen, view }) {
+function DiscountForm({ discount, setOpen, view, getDiscounts }) {
     const [formData, setFormData] = useState({
         name: "",
         discount: "",
@@ -55,6 +55,7 @@ function DiscountForm({ discount, setOpen, view }) {
 
             if (data.data.success) {
                 toast.success(data.data.message);
+                getDiscounts();
             }
         } catch (error) {
             console.error(error, "<<-- Error in add discount");
@@ -200,7 +201,7 @@ function DiscountForm({ discount, setOpen, view }) {
                                         disabled={view}
                                         // freeSolo
                                         id="product"
-                                        disableClearable
+                                        // disableClearable
                                         isOptionEqualToValue={(option, value) =>
                                             option.id === value.id
                                         }
